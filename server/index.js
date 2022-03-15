@@ -22,6 +22,18 @@ app.get("/api/get", (req, res) => {
   });
 });
 
+app.post("/api/post", (req, res) => {
+  const { name, email, contact } = req.body;
+  const sqlInsert =
+    "INSERT INTO contact_db (name, email, contact) VALUES (?, ?, ?)";
+
+  db.query(sqlInsert, [name, email, contact], (error, result) => {
+    if (error) {
+      console.log(error);
+    }
+  });
+});
+
 app.get("/", (req, res) => {
   //   const sqlInsert =
   //     "INSERT INTO contact_db (name, email, contact) VALUES ('john doe', 'johndoe@test.com', 12341234)";

@@ -1,13 +1,21 @@
 import "./App.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Home from "./pages/Home";
+import AddEdit from "./pages/AddEdit";
 
 function App() {
   return (
-    <div className="App">
-      <ToastContainer position="top-center" />
-      <h1>Hello react</h1>
-    </div>
+    <BrowserRouter>
+      <div className="App">
+        <ToastContainer position="top-center" />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/addContact" element={<AddEdit />} />
+        </Routes>
+      </div>
+    </BrowserRouter>
   );
 }
 
