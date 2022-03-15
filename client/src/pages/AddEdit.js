@@ -17,23 +17,47 @@ const AddEdit = () => {
 
   const navigate = useNavigate();
 
+  //update
+  const { id } = useParams();
+
+  useEffect(() => {
+    axios
+      .get(`http://localhost:5000/api/get/${id}`)
+      .then((response) => setState({ ...response.data[0] }));
+  }, [id]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!name || !email || !contact) {
       toast.error("Please provide values into each input field!");
     } else {
-      axios
-        .post("http://localhost:5000/api/post", {
-          name,
-          email,
-          contact,
-        })
-        .then(() => {
-          setState({ name: "", email: "", contact: "" });
-        })
-        .catch((err) => toast.error(err.response.data));
+      if (!id) {
+        axios
+          .post("http://localhost:5000/api/post", {
+            name,
+            email,
+            contact,
+          })
+          .then(() => {
+            setState({ name: "", email: "", contact: "" });
+          })
+          .catch((err) => toast.error(err.response.data));
 
-      toast.success("Contact Added Successfully");
+        toast.success("Contact Added Successfully");
+      } else {
+        axios
+          .put(`http://localhost:5000/api/update/${id}`, {
+            name,
+            email,
+            contact,
+          })
+          .then(() => {
+            setState({ name: "", email: "", contact: "" });
+          })
+          .catch((err) => toast.error(err.response.data));
+
+        toast.success("Contact Updated Successfully");
+      }
 
       setTimeout(() => {
         navigate("/");
@@ -56,7 +80,7 @@ const AddEdit = () => {
           id="name"
           name="name"
           placeholder="Enter your name"
-          value={name}
+          value={name || ""}
           onChange={handleInputChange}
         />
 
@@ -66,7 +90,7 @@ const AddEdit = () => {
           id="email"
           name="email"
           placeholder="Enter your email"
-          value={email}
+          value={email || ""}
           onChange={handleInputChange}
         />
 
@@ -76,11 +100,11 @@ const AddEdit = () => {
           id="contact"
           name="contact"
           placeholder="Enter your contact"
-          value={contact}
+          value={contact || ""}
           onChange={handleInputChange}
         />
 
-        <input type="submit" value="Save" />
+        <input type="submit" value={id ? "Update" : "Save"} />
         <Link to="/">
           <input type="button" value="Go Back" />
         </Link>
